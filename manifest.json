@@ -1,0 +1,75 @@
+{
+  "name": "Sapphire",
+  "version": "0.0.1",
+  "description": "Sapphire - extending the Okta user interface with powerful additional features",
+  "manifest_version": 3,
+  "permissions": [
+    "storage",
+    "tabs",
+    "cookies",
+    "identity"
+  ],
+  "host_permissions": [
+    "https://*.okta.com/*",
+    "https://*.oktapreview.com/*",
+    "https://*.okta-emea.com/*"
+  ],
+  "icons": {
+    "16": "assets/Sapphire16.png",
+    "24": "assets/Sapphire24.png",
+    "32": "assets/Sapphire32.png",
+    "48": "assets/Sapphire48.png",
+    "64": "assets/Sapphire64.png",
+    "128": "assets/Sapphire128.png"
+  },
+  "action": {
+    "default_icon": {
+      "16": "assets/Sapphire16.png",
+      "24": "assets/Sapphire24.png",
+      "32": "assets/Sapphire32.png",
+      "48": "assets/Sapphire48.png",
+      "64": "assets/Sapphire64.png",
+      "128": "assets/Sapphire128.png"
+    },
+    "default_title": "Sapphire",
+    "default_popup": "pages/popup/index.html"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "/assets/*.png",
+        "/assets/*.ttf"
+      ],
+      "matches": [
+        "https://*.okta.com/*",
+        "https://*.okta-emea.com/*",
+        "https://*.oktapreview.com/*"
+      ]
+    }
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "https://*.okta.com/*",
+        "https://*.oktapreview.com/*",
+        "https://*.okta-emea.com/*"
+      ],
+      "js": [
+        "js/jquery-3.6.1.min.js",
+        "js/gsap.min.js",
+        "js/hotkeys.min.js",
+        "js/sapphire.js",
+        "js/main.js"
+      ],
+      "css": [
+        "css/main.css"
+      ]
+    }
+  ],
+  "content_security_policy": {
+    "extension_pages": "object-src 'self';script-src 'self';img-src https://*.oktacdn.com https://system.okta.com https://*.cloudareanet.com https://*.clouditude.com https://*.hioktane.com https://*.lowoktane.com https://*.openalloy.com https://*.okta.com https://*.okta1.com https://*.okta-emea.com https://*.oktapreview.com https://*.perfcloud.org https://*.primeapp.com https://*.trexcloud.com https://*.widerock.com https://*.okta.ninja https://*.okta.mil https://*.okta-miltest.com https://*.okta-gov.com https://*.trex-govcloud.com;style-src 'unsafe-inline' https://*.oktacdn.com"
+  }
+}

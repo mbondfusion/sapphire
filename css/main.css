@@ -1,0 +1,138 @@
+@font-face {
+  font-family: "Montserrat Light";
+  src: url("chrome-extension://oaabebfnojoimeoeljhpdhibcfdcjlic/assets/Montserrat-Light.ttf");
+}
+@font-face {
+  font-family: "Montserrat Medium";
+  src: url("chrome-extension://oaabebfnojoimeoeljhpdhibcfdcjlic/assets/Montserrat-Medium.ttf");
+}
+
+/* Main styles - START */
+.sapphire-overlay {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  width: 100vw;
+  height: 100vh;
+
+  background-color: rgba(14, 131, 167, 0.3);
+
+  opacity: 0;
+  visibility: hidden;
+  z-index: 100;
+}
+
+.sapphire-menu {
+  position: relative;
+  width: 0;
+  height: 0;
+
+  border: 2px solid #000;
+  border-radius: 50%;
+  /* background: linear-gradient(#33ccff, #ff0066); */
+  background-color: #fff;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+
+  opacity: 0;
+  visibility: hidden;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  user-select: none;
+}
+
+.sapphire-menu__logo {
+  width: 0;
+  height: 0;
+
+  opacity: 0;
+  visibility: hidden;
+  z-index: 1;
+}
+
+.sapphire-menu__menu {
+  position: absolute;
+  top: 40px;
+  width: max-content;
+
+  padding: 0;
+  margin-left: 240px;
+
+  overflow: hidden;
+  list-style: none;
+
+  opacity: 0;
+  visibility: hidden;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+}
+
+.sapphire-menu__item {
+  padding: 4px 10px;
+
+  cursor: pointer;
+
+  color: #000;
+  font-family: "Montserrat Light";
+
+  border: solid black;
+  border-width: 1px 1px 0 1px;
+  background-color: #33ccff;
+}
+
+/* Add bottom border to last menu item */
+.sapphire-menu__item:nth-last-of-type(1) {
+  border-bottom: 1px solid black;
+}
+
+.sapphire-menu__item:hover {
+  color: #fff;
+  background-color: #1688ae;
+}
+
+.sapphire-dialog {
+  padding: 0;
+  margin: auto;
+  margin-top: 130px;
+
+  width: 400px;
+  min-width: 80vw;
+  height: 60vh;
+  min-height: 200px;
+
+  border: 1px solid black;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 50%);
+  background-color: #fff;
+
+  opacity: 0;
+  visibility: hidden;
+}
+
+.sapphire-dialog__title {
+  text-align: center;
+  font-weight: 600;
+  font-size: 1.1em;
+
+  background-color: #33ccff;
+}
+
+.sapphire-dialog__content {
+  padding: 2px 6px;
+  margin: 0;
+
+  width: 100%;
+  border-top: 1px solid black;
+}
+/* Main styles - END */
+
+/* Helper styles - START */
+.sapphire__hidden {
+  display: none;
+}
+/* Helper styles -START */
