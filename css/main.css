@@ -78,7 +78,7 @@
 
   cursor: pointer;
 
-  color: #000;
+  color: #fff;
   font-family: "Montserrat Light";
 
   border: solid black;
@@ -92,8 +92,20 @@
 }
 
 .sapphire-menu__item:hover {
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.4) inset;
+}
+
+.sapphire-button {
+  padding: 2px 4px;
+  font-family: 'Montserrat Medium';
+
   color: #fff;
-  background-color: #1688ae;
+  cursor: pointer;
+  background-color: #00bfff;
+}
+
+.sapphire-button:hover {
+  background-color: #33ccff;
 }
 
 .sapphire-dialog {
@@ -114,12 +126,34 @@
   visibility: hidden;
 }
 
+.sapphire-dialog__nav {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background-color: #33ccff;
+}
+
 .sapphire-dialog__title {
+  flex-grow: 1;
+
   text-align: center;
   font-weight: 600;
   font-size: 1.1em;
+}
 
-  background-color: #33ccff;
+.sapphire-dialog__button-close {
+  color: #000;
+
+  padding: 0 6px;
+  margin: 0;
+
+  border: none;
+  background-color: transparent;
+}
+
+.sapphire-dialog__button-close:hover {
+  color: #fff;
 }
 
 .sapphire-dialog__content {
@@ -129,10 +163,96 @@
   width: 100%;
   border-top: 1px solid black;
 }
+
+.sapphire-dialog__content * {
+  font-family: 'Montserrat Medium';
+}
 /* Main styles - END */
 
 /* Helper styles - START */
-.sapphire__hidden {
+.sapphire--flex {
+  display: flex;
+}
+
+.sapphire--flex-grow {
+  flex-grow: 1;
+}
+
+.sapphire-m-auto {
+  margin: auto;
+}
+
+.sapphire--mx-auto {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.sapphire--mx-0 {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.sapphire--mx-1 {
+  margin-left: calc(1rem * 0.25);
+  margin-right: calc(1rem * 0.25);
+}
+
+.sapphire--mx-2 {
+  margin-left: calc(1rem * 0.5);
+  margin-right: calc(1rem * 0.5);
+}
+
+.sapphire--mx-3 {
+  margin-left: 1rem;
+  margin-right: 1rem;
+}
+
+.sapphire--mx-4 {
+  margin-left: calc(1rem * 1.5);
+  margin-right: calc(1rem * 1.5);
+}
+
+.sapphire--mx-5 {
+  margin-left: calc(1rem * 3);
+  margin-right: calc(1rem * 3);
+}
+
+.sapphire--my-auto {
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+.sapphire--my-0 {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.sapphire--my-1 {
+  margin-top: calc(1rem * 0.25);
+  margin-bottom: calc(1rem * 0.25);
+}
+
+.sapphire--my-2 {
+  margin-top: calc(1rem * 0.5);
+  margin-bottom: calc(1rem * 0.5);
+}
+
+.sapphire--my-3 {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.sapphire--my-4 {
+  margin-top: calc(1rem * 1.5);
+  margin-bottom: calc(1rem * 1.5);
+}
+
+.sapphire--my-5 {
+  margin-top: calc(1rem * 3);
+  margin-bottom: calc(1rem * 3);
+}
+
+.sapphire--hidden {
   display: none;
 }
-/* Helper styles -START */
+/* Helper styles - END */

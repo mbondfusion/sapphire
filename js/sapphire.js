@@ -25,15 +25,16 @@ class SapphireElements {
    * @param {string} name The "name" attribute of the button
    * @param {string} value The "value" attribute of the button
    * @param {string} type The "type" attribute of the button (default: "button")
-   * @param {Array} classList A list of classes to add to the button
+   * @param {Array} classList Optional list of classes to add to the button
    * @returns The created button element
    */
   static button(id, name, value, type = 'button', classList) {
     const element = SapphireElements.createElement('<input/>', id, name)
       .attr('value', value)
-      .attr('type', type);
+      .attr('type', type)
+      .addClass('sapphire-button');
 
-    if (classList !== undefined && typeof classList === 'array') {
+    if (classList !== undefined && typeof classList === 'object') {
       classList.forEach(x => element.addClass(x));
     }
     return element;
@@ -44,14 +45,14 @@ class SapphireElements {
    *
    * @param {string} id The "id" attribute of the checkbox
    * @param {string} name The "name" attribute of the checkbox
-   * @param {Array} classList A list of classes to add to the checkbox
+   * @param {Array} classList Optional list of classes to add to the checkbox
    * @returns The created checkbox element
    */
   static checkbox(id, name, classList) {
     const element = SapphireElements.createElement('<input/>', id, name)
       .attr('type', 'checkbox');
 
-    if (classList !== undefined && typeof classList === 'array') {
+    if (classList !== undefined && typeof classList === 'object') {
       classList.forEach(x => element.addClass(x));
     }
     return element;
@@ -62,27 +63,77 @@ class SapphireElements {
    *
    * @param {string} id The "id" attribute of the dialog
    * @param {string} title The text in the "title" of the dialog
-   * @param {Array} classList A list of classes to add to the dialog
+   * @param {Array} classList Optional list of classes to add to the dialog
    * @returns The created dialog element
    */
   static dialog(id, title, classList) {
-    // Create the title and content elements
-    const titleElement = SapphireElements.title(`${id}__title`, title);
-    const content = SapphireElements.createElement('<div/>', `${id}__content`)
-      .addClass('sapphire-dialog__content');
-    const element = SapphireElements.createElement('<dialog/>', id)
+    // Create the dialog element
+    const dialogElement = SapphireElements.createElement('<dialog/>', id)
       .addClass('sapphire-dialog')
-      .append(titleElement)
-      .append(content);
 
     // Add any additional classes
-    if (classList !== undefined && typeof classList === 'array') {
-      classList.forEach(x => element.addClass(x));
+    if (classList !== undefined && typeof classList === 'object') {
+      classList.forEach(x => dialogElement.addClass(x));
     }
 
-    // Make an accessor for the content element (to add further content, etc.)
-    element.content = content;
-    return element;
+    // Create navigation bar (title, close button)
+    const dialogTitle = SapphireElements.title(`${id}__title`, title);
+    const closeButton = SapphireElements.button(
+      'dialog-close', 'dialog-close', 'Close', 'button',
+    ).addClass('sapphire-dialog__button-close');
+
+    const navBar = SapphireElements.createElement('<div />')
+      .addClass('sapphire-dialog__nav')
+      .append(dialogTitle)
+      .append(closeButton);
+
+    const content = SapphireElements.createElement('<div/>', `${id}__content`)
+      .addClass('sapphire-dialog__content');
+
+    // Add the dialog elements
+    dialogElement.append(navBar).append(content);
+
+    // Setup an accessor for the close button and content elements
+    dialogElement.closeButton = closeButton;
+    dialogElement.content = content;
+    return dialogElement;
+  }
+
+  /**
+   * 
+   * @param {string} id The "id" attribute of the input box
+   * @param {string} name The "name" attribute of the input box
+   * @param {string} type The "type" attribute of the input box
+   * @param {string} label The "label" for the input box (empty|null = no label)
+   * @param {Array} classList Optional list of classes to add to the input
+   * @returns The created input element collection (input + label)
+   */
+  static input(id, name, type, label, classList) {
+    const inputCollection = SapphireElements.createElement('<div />');
+    const inputElement = SapphireElements.createElement('<input />', id)
+      .attr('name', name)
+      .attr('type', type)
+      .addClass('sapphire-dialog__input');
+
+    if (classList !== undefined && typeof classList === 'object') {
+      classList.forEach(x => inputElement.addClass(x));
+    }
+
+    if (label !== undefined && label !== null) {
+      const labelElement = SapphireElements.createElement(
+        `<label>${label}</label>`
+      ).attr('id', `${id}_label`)
+        .attr('for', name)
+        .addClass('sapphire-dialog__label');
+
+      inputCollection.label = labelElement;
+      inputCollection.append(labelElement);
+    }
+
+    inputCollection.input = inputElement;
+    inputCollection.append(inputElement);
+
+    return inputCollection;
   }
 
   /**
@@ -97,7 +148,7 @@ class SapphireElements {
     const element = SapphireElements.createElement(`<div>${text}</div>`, id)
       .addClass('sapphire-dialog__title');
 
-    if (classList !== undefined && typeof classList === 'array') {
+    if (classList !== undefined && typeof classList === 'object') {
       classList.forEach(x => element.addClass(x));
     }
 
@@ -161,7 +212,7 @@ class SapphireUtils {
    * execute the callback with the retrieved element(s)
    *
    * @param {string} selector
-   * @param {function} callback
+   * @param {Function} callback
    * @param {any} maxTimes
    */
   waitForElement(selector, callback, maxTimes = false) {
@@ -415,6 +466,20 @@ class PageController extends SapphireUtils {
         .to(dialog[0], {opacity: 1, 'margin-top': 110, autoAlpha: 1});
     });
 
+    // Add the close button event (must be done here to access "hideOverlay")
+    dialog.closeButton.click((event) => {
+      // Animate the dialog close and remove the dialog after
+      gsap.timeline({defaults: {duration: 0.1}})
+        .to(dialog[0], {opacity: 0, 'margin-top': 130, autoAlpha: 0})
+        .then(() => {
+          this.hideOverlay(() => dialog.remove());
+        });
+
+      // Prevent defaults
+      event.stopPropagation();
+      event.preventDefault();
+    });
+
     // Destroy the dialog when clicking on the overlay (executed only once)
     this.#overlay.on('click', (event) => {
       // Throw away click events that propagate from child elements
@@ -518,31 +583,29 @@ class GroupsController extends PageController {
   compareGroups() {
     const dialog = SapphireElements.dialog(
       'compare-groups-dialog',
-      'Compare Group Memberships',
-      []
+      'Compare Group Memberships'
     );
 
-    const closeBtn = SapphireElements.button(
-      'dialog-close', 'dialog-close', 'Close'
-    ).attr('type', 'button')
-      .click((event) => {
-        // TODO: Move this logic to a separate "closeDialog" method
+    // Add compare group dialog elements
+    const sourceGroupId = SapphireElements.input(
+      'source-groupid', 'source-groupid', 'text', 'Source Group ID'
+    ).addClass('sapphire--mx-2').addClass('sapphire--flex-grow');
+    const destGroupId = SapphireElements.input(
+      'dest-groupid', 'dest-groupid', 'text', 'Destination Group ID'
+    ).addClass('sapphire--mx-2').addClass('sapphire--flex-grow');
 
-        // Animate the dialog close and remove the dialog after
-        gsap.timeline({defaults: {duration: 0.1}})
-          .to(dialog[0], {opacity: 0, 'margin-top': 130, autoAlpha: 0})
-          .then(() => {
-            this.hideOverlay(() => dialog.remove());
-          });
+    sourceGroupId.label.addClass('sapphire--mx-2');
+    destGroupId.label.addClass('sapphire--mx-2');
 
-        // Prevent defaults
-        event.stopPropagation();
-        event.preventDefault();
-      });
+    const compareInputs = SapphireElements.createElement('<div />')
+      .addClass('sapphire--flex')
+      .addClass('sapphire--my-2')
+      .append(sourceGroupId)
+      .append(destGroupId);
 
     dialog.content
       .append('<span>Select groups and then compare...</span>')
-      .append(closeBtn);
+      .append(compareInputs);
 
     this.showDialog(dialog);
   }
